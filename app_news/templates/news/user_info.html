@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Аккаунт</title>
+</head>
+<body>
+    <h2>Аккаунт {{ user.username }}</h2>
+    <ul>
+        <li>Имя: {{ user.first_name }}</li>
+        <li>Фамилия: {{ user.last_name}}</li>
+        <li>Город: {{ user.profile.city }}</li>
+        <li>Телефон: {{ user.profile.phone_number }}</li>
+        <li>Количество новостей: {{ user.profile.news_count }}</li>
+        <li>Верифицирован:
+            {% if user.profile.is_verified %}
+                Да
+            {% else %}
+                Нет
+            {% endif %}
+        </li>
+    </ul>
+    <br/>
+    <a href="{% url 'news' %}"><button>Назад</button></a>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Новости</title>
+</head>
+<body style="margin: 0; font-family: 'Gilroy', sans-serif;">
+    <div class="container" style="margin: 20px 60px 20px 60px">
+        <header style="text-align: justify">
+            <div style="display: inline-block">
+                <h1>Новости сейчас</h1>
+            </div>
+            <div style="display: inline-block; float: right; text-align: center">
+                {% if request.user.is_authenticated %}
+                    <h4>Привет, {{ request.user.username }}</h4>
+                    <a href="{% url 'user-info' request.user.username%}"><button>Аккаунт</button></a>
+                    <a href="{% url 'logout'%}"><button>Выйти</button></a>
+                {% else %}
+                    <h4>Кажется, ты еще не залогинился</h4>
+                    <a href="{% url 'login'%}"><button>Войти</button></a>
+                {% endif %}
+            </div>
+        </header>
+        <hr/>
+
+    </div>
+</body>
+</html>

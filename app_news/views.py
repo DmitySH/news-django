@@ -1,7 +1,9 @@
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect
+from django.contrib.auth import views
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import ListView, DetailView
+
 from app_news.forms import *
 from app_news.models import *
 
@@ -56,3 +58,21 @@ class LoginView(View):
             else:
                 form.add_error('__all__', 'Неверные данные!')
         return render(request, 'news/login.html', context={'form': form})
+
+
+class LogoutView(views.LogoutView):
+    next_page = '../'
+
+
+class NewsListView(ListView):
+    # model = News
+    template_name = 'news/news.html'
+    context_object_name = 'news_list'
+    queryset = News.objects.order_by('created_at')
+
+
+class UserDetailView(DetailView):
+    model = User
+    template_name = 'news/user_info.html'
+    context_object_name = 'user'
+    slug_field = 'username'
