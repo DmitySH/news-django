@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import views
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 
 from app_news.forms import *
 from app_news.models import *
@@ -65,7 +65,7 @@ class LogoutView(views.LogoutView):
 
 
 class NewsListView(ListView):
-    # model = News
+    model = News
     template_name = 'news/news.html'
     context_object_name = 'news_list'
     queryset = News.objects.order_by('created_at')
@@ -76,3 +76,17 @@ class UserDetailView(DetailView):
     template_name = 'news/user_info.html'
     context_object_name = 'user'
     slug_field = 'username'
+
+
+class NewsDetailView(DetailView):
+    model = News
+    template_name = 'news/news_detail.html'
+    context_object_name = 'news'
+
+
+class NewsCreateView(CreateView):
+    model = News
+    template_name = 'news/add_news.html'
+    fields = '__all__'
+    context_object_name = 'form'
+    success_url = '../'

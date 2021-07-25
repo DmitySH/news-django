@@ -10,19 +10,35 @@
             <div style="display: inline-block">
                 <h1>Новости сейчас</h1>
             </div>
+            <div style="display: inline-block">
+                <a href="{% url 'create' %}"><button><h3>Добавить новость</h3></button></a>
+            </div>
             <div style="display: inline-block; float: right; text-align: center">
                 {% if request.user.is_authenticated %}
                     <h4>Привет, {{ request.user.username }}</h4>
-                    <a href="{% url 'user-info' request.user.username%}"><button>Аккаунт</button></a>
+                    <a href="{% url 'user-info' request.user.username %}"><button>Аккаунт</button></a>
                     <a href="{% url 'logout'%}"><button>Выйти</button></a>
                 {% else %}
                     <h4>Кажется, ты еще не залогинился</h4>
+                    <a href="{% url 'register'%}"><button>Регистрация</button></a>
                     <a href="{% url 'login'%}"><button>Войти</button></a>
                 {% endif %}
             </div>
         </header>
         <hr/>
-
+        <div class="news-list">
+            {% if not news_list %}
+                <h3>Новостей нет</h3>
+            {% else %}
+                <ol>
+                    {% for news in news_list %}
+                        <li>
+                            <a href="{% url 'news-detail' news.id %}">{{ news }}</a>
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>

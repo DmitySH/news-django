@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ news.title }}</title>
+</head>
+<body>
+    <h2>{{ news.title }}</h2>
+    <p>{{ news.content }}</p>
+    <p>От {{ news.created_at }}</p>
+    <a href="{% url 'news' %}"><button>Назад</button></a>
+</body>
+</html>

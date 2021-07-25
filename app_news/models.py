@@ -11,8 +11,8 @@ class Profile(models.Model):
 
 
 class News(models.Model):
-    title = models.CharField(max_length=50)
-    content = models.TextField(default='')
+    title = models.CharField(max_length=50, verbose_name='Заголовок')
+    content = models.TextField(default='', verbose_name='Контент')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
