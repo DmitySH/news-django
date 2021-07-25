@@ -27,3 +27,7 @@ class AddNewsForm(forms.ModelForm):
         model = News
         fields = '__all__'
 
+
+class VerifyForm(forms.Form):
+    username = forms.CharField(help_text='Имя пользователя')
+    verify = forms.BooleanField(widget=forms.CheckboxInput, required=False)

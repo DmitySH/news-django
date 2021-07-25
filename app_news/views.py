@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views
+from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView
@@ -90,3 +91,39 @@ class NewsCreateView(CreateView):
     fields = '__all__'
     context_object_name = 'form'
     success_url = '../'
+
+
+class VerifyFormView(View):
+    def get(self, request):
+        users = [user for user in User.objects.all()
+                 if not user.groups.filter(name='Модераторы').exists()
+                 and not user.is_superuser]
+        form = VerifyForm()
+        return render(request, 'news/verify_user.html',
+                      context={'form': form, 'user_list': users})
+
+    def post(self, request):
+        users = [user for user in User.objects.all()
+                 if not user.groups.filter(name='Модераторы').exists()
+                 and not user.is_superuser]
+        form = VerifyForm(request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            verify = form.cleaned_data['verify']
+
+            user = User.objects.filter(username=username).first()
+            if user in users:
+                user.profile.is_verified = verify
+                group = Group.objects.get(name='Верифицированные')
+                if verify:
+                    group.user_set.add(user)
+                else:
+                    group.user_set.remove(user)
+                group.save()
+                user.profile.save()
+                user.save()
+            else:
+                form.add_error('__all__', 'Такого пользователя нет')
+        return render(request, 'news/verify_user.html',
+                      context={'form': form, 'user_list': users})

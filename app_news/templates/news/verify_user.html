@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Верицифкация</title>
+</head>
+<body>
+    {% for us in user_list %}
+        <p>{{ us.username }} верифицрован: {{ us.profile.is_verified }}</p>
+    {% endfor %}
+    <hr/>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>Принять</button>
+    </form>
+        <a href="../"><button>Назад</button></a>
+</body>
+</html>

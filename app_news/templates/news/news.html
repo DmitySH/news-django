@@ -10,9 +10,11 @@
             <div style="display: inline-block">
                 <h1>Новости сейчас</h1>
             </div>
-            <div style="display: inline-block">
+            {% if perms.app_news.add_news%}
+                <div style="display: inline-block">
                 <a href="{% url 'create' %}"><button><h3>Добавить новость</h3></button></a>
             </div>
+            {% endif %}
             <div style="display: inline-block; float: right; text-align: center">
                 {% if request.user.is_authenticated %}
                     <h4>Привет, {{ request.user.username }}</h4>
