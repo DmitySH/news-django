@@ -5,15 +5,18 @@
     <title>Аккаунт</title>
 </head>
 <body>
-    <h2>Аккаунт {{ user.username }}</h2>
+    {% if request.user.username != profile.user.username %}
+    <h2>Попался, не подглядывай</h2>
+    {% else %}
+    <h2>Аккаунт {{ profile.user.username }}</h2>
     <ul>
-        <li>Имя: {{ user.first_name }}</li>
-        <li>Фамилия: {{ user.last_name}}</li>
-        <li>Город: {{ user.profile.city }}</li>
-        <li>Телефон: {{ user.profile.phone_number }}</li>
-        <li>Количество новостей: {{ user.profile.news_count }}</li>
+        <li>Имя: {{ profile.user.first_name }}</li>
+        <li>Фамилия: {{ profile.user.last_name}}</li>
+        <li>Город: {{ profile.city }}</li>
+        <li>Телефон: {{ profile.phone_number }}</li>
+        <li>Количество новостей: {{ profile.news_count }}</li>
         <li>Верифицирован:
-            {% if user.profile.is_verified %}
+            {% if profile.is_verified %}
                 Да
             {% else %}
                 Нет
@@ -23,7 +26,8 @@
     <br/>
     {% if perms.app_news.view_profile %}
         <a href="{% url 'verify' %}"><button>Верицикация пользователей</button></a>
-    {% endif %} 
+    {% endif %}
+    {% endif %}
     <a href="{% url 'news' %}"><button>Назад</button></a>
 </body>
 </html>

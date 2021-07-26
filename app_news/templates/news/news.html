@@ -18,7 +18,7 @@
             <div style="display: inline-block; float: right; text-align: center">
                 {% if request.user.is_authenticated %}
                     <h4>Привет, {{ request.user.username }}</h4>
-                    <a href="{% url 'user-info' request.user.username %}"><button>Аккаунт</button></a>
+                    <a href="user/{{ request.user.profile.slug }}/"><button>Аккаунт</button></a>
                     <a href="{% url 'logout'%}"><button>Выйти</button></a>
                 {% else %}
                     <h4>Кажется, ты еще не залогинился</h4>

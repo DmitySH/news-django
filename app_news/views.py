@@ -73,10 +73,10 @@ class NewsListView(ListView):
 
 
 class UserDetailView(DetailView):
-    model = User
+    model = Profile
     template_name = 'news/user_info.html'
-    context_object_name = 'user'
-    slug_field = 'username'
+    context_object_name = 'profile'
+    slug_field = 'slug'
 
 
 class NewsDetailView(DetailView):
@@ -91,6 +91,12 @@ class NewsCreateView(CreateView):
     fields = '__all__'
     context_object_name = 'form'
     success_url = '../'
+
+    def post(self, request, *args, **kwargs):
+        profile = Profile.objects.filter(user=request.user)[0]
+        profile.news_count += 1
+        profile.save()
+        return super(NewsCreateView, self).post(request, *args, **kwargs)
 
 
 class VerifyFormView(View):

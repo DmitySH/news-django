@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from pytils.translit import slugify
 
 
 class Profile(models.Model):
@@ -8,6 +9,14 @@ class Profile(models.Model):
     phone_number = models.CharField(max_length=12, blank=True)
     is_verified = models.BooleanField(default=False)
     news_count = models.IntegerField(default=0, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL",
+                            default=None, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            # Newly created object, so set slug
+            self.slug = slugify(self.user.username)
+        super(Profile, self).save(*args, **kwargs)
 
 
 class News(models.Model):
