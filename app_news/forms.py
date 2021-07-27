@@ -21,13 +21,6 @@ class AuthForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-class AddNewsForm(forms.ModelForm):
-
-    class Meta:
-        model = News
-        fields = '__all__'
-
-
 class VerifyForm(forms.Form):
     username = forms.CharField(help_text='Имя пользователя')
     verify = forms.BooleanField(widget=forms.CheckboxInput, required=False)

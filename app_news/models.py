@@ -21,9 +21,14 @@ class Profile(models.Model):
 
 class News(models.Model):
     title = models.CharField(max_length=50, verbose_name='Заголовок')
-    content = models.TextField(default='', verbose_name='Контент')
+    content = models.TextField(default='', verbose_name='Текст новости')
     created_at = models.DateTimeField(auto_now_add=True)
+    confirmed = models.BooleanField(default=False, verbose_name='Подтверждено', blank=True)
+
+    class Meta:
+        permissions = (
+            ('publish_news', 'Может !publish_news!'),
+        )
 
     def __str__(self):
         return self.title
-

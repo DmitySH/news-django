@@ -3,8 +3,8 @@ from django.contrib.auth import views
 from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView
-
+from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.core.exceptions import PermissionDenied
 from app_news.forms import *
 from app_news.models import *
 
@@ -69,7 +69,13 @@ class NewsListView(ListView):
     model = News
     template_name = 'news/news.html'
     context_object_name = 'news_list'
-    queryset = News.objects.order_by('created_at')
+
+
+    def get_queryset(self):
+        if self.request.user.has_perm('app_news.publish_news'):
+            return News.objects.order_by('-created_at')
+        else:
+            return News.objects.filter(confirmed=True).order_by('-created_at')
 
 
 class UserDetailView(DetailView):
@@ -84,11 +90,18 @@ class NewsDetailView(DetailView):
     template_name = 'news/news_detail.html'
     context_object_name = 'news'
 
+    def post(self, request, *args, **kwargs):
+        news = self.get_object()
+        news.confirmed = True
+        news.save()
+        return self.get(request, *args, **kwargs)
+
 
 class NewsCreateView(CreateView):
     model = News
     template_name = 'news/add_news.html'
-    fields = '__all__'
+    fields = ['title', 'content']
+
     context_object_name = 'form'
     success_url = '../'
 
@@ -101,6 +114,9 @@ class NewsCreateView(CreateView):
 
 class VerifyFormView(View):
     def get(self, request):
+        if not request.user.has_perm('app_news.view_profile'):
+            raise PermissionDenied
+
         users = [user for user in User.objects.all()
                  if not user.groups.filter(name='Модераторы').exists()
                  and not user.is_superuser]
@@ -133,3 +149,4 @@ class VerifyFormView(View):
                 form.add_error('__all__', 'Такого пользователя нет')
         return render(request, 'news/verify_user.html',
                       context={'form': form, 'user_list': users})
+

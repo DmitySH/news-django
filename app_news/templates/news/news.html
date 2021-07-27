@@ -35,6 +35,9 @@
                 <ol>
                     {% for news in news_list %}
                         <li>
+                            {% if not news.confirmed and perms.app_news.publish_news %}
+                                <h4>Не опубликовано!</h4>
+                            {% endif %}
                             <a href="{% url 'news-detail' news.id %}">{{ news }}</a>
                         </li>
                     {% endfor %}

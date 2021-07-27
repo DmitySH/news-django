@@ -8,6 +8,12 @@
     <h2>{{ news.title }}</h2>
     <p>{{ news.content }}</p>
     <p>От {{ news.created_at }}</p>
+    {% if perms.app_news.publish_news and not news.confirmed %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Опубликовать</button>
+        </form>
+    {% endif %}
     <a href="{% url 'news' %}"><button>Назад</button></a>
 </body>
 </html>
