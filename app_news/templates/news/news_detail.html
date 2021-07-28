@@ -11,9 +11,23 @@
     {% if perms.app_news.publish_news and not news.confirmed %}
         <form method="post">
             {% csrf_token %}
-            <button type="submit">Опубликовать</button>
+            <button name="publish" type="submit">Опубликовать</button>
         </form>
     {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button name="add_comment" type="submit">Добавить комментарий</button>
+    </form>
+    {% for comment in comments %}
+        {% if comment.author %}
+            <h4>{{ comment.author.username }}</h4>
+        {% else %}
+            <h4>Аноним</h4>
+        {% endif %}
+        {{ comment.content }}
+        <hr>
+    {% endfor %}
     <a href="{% url 'news' %}"><button>Назад</button></a>
 </body>
 </html>

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from pytils.translit import slugify
 
 
@@ -32,3 +32,8 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=None)
+    content = models.TextField(default='', verbose_name='Комментарий')
+    news = models.ForeignKey(News, default=None, null=True, on_delete=models.CASCADE)

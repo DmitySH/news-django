@@ -90,11 +90,36 @@ class NewsDetailView(DetailView):
     template_name = 'news/news_detail.html'
     context_object_name = 'news'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = super(NewsDetailView, self).get_object()
+        context['comments'] = Comment.objects.filter(news=obj).order_by('-id')
+        if self.request.method == 'POST':
+            context['form'] = AddCommentForm(self.request.POST)
+        else:
+            context['form'] = AddCommentForm()
+        return context
+
     def post(self, request, *args, **kwargs):
-        news = self.get_object()
-        news.confirmed = True
-        news.save()
-        return self.get(request, *args, **kwargs)
+        if 'publish' in request.POST:
+            news = self.get_object()
+            news.confirmed = True
+            news.save()
+        elif 'add_comment' in request.POST:
+            form = AddCommentForm(request.POST)
+            if form.is_valid():
+                form.save()
+                Comment.objects.create(**form.cleaned_data)
+                comment = Comment.objects.last()
+                news = self.get_object()
+                comment.news = news
+                if isinstance(request.user, User):
+                    comment.author = request.user
+                else:
+                    user = None
+                comment.save()
+
+        return redirect(request.path)
 
 
 class NewsCreateView(CreateView):
@@ -149,4 +174,3 @@ class VerifyFormView(View):
                 form.add_error('__all__', 'Такого пользователя нет')
         return render(request, 'news/verify_user.html',
                       context={'form': form, 'user_list': users})
-
