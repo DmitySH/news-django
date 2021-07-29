@@ -37,3 +37,11 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=None)
     content = models.TextField(default='', verbose_name='Комментарий')
     news = models.ForeignKey(News, default=None, null=True, on_delete=models.CASCADE)
+
+
+class Tag(models.Model):
+    news = models.ManyToManyField(News, default=None, blank=True)
+    name = models.CharField(max_length=12)
+
+    def __str__(self):
+        return self.name

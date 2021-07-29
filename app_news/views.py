@@ -65,17 +65,22 @@ class LogoutView(views.LogoutView):
     next_page = '../'
 
 
-class NewsListView(ListView):
-    model = News
-    template_name = 'news/news.html'
-    context_object_name = 'news_list'
-
-
-    def get_queryset(self):
-        if self.request.user.has_perm('app_news.publish_news'):
-            return News.objects.order_by('-created_at')
+class NewsListView(View):
+    def get(self, request, *args, **kwargs):
+        news = None
+        if request.user.has_perm('app_news.publish_news'):
+            news = News.objects.order_by('-created_at')
         else:
-            return News.objects.filter(confirmed=True).order_by('-created_at')
+            news = News.objects.filter(confirmed=True).order_by('-created_at')
+        form = FilterForm()
+
+        tag_name = request.GET.get("filter_by")
+        if tag_name and tag_name !='Все новости':
+            tag = Tag.objects.filter(name=tag_name)[0]
+
+            news = tag.news.all()
+
+        return render(request, 'news/news.html', context={'form': form, 'news_list': news})
 
 
 class UserDetailView(DetailView):

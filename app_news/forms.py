@@ -25,8 +25,17 @@ class VerifyForm(forms.Form):
     username = forms.CharField(help_text='Имя пользователя')
     verify = forms.BooleanField(widget=forms.CheckboxInput, required=False)
 
+
 class AddCommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = '__all__'
         exclude = ['news', 'author']
+
+
+class FilterForm(forms.Form):
+    FILTER_CHOICES = (
+        (tag.name, tag.name) for tag in Tag.objects.all()
+    )
+
+    filter_by = forms.ChoiceField(choices=FILTER_CHOICES)

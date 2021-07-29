@@ -23,12 +23,17 @@
                 {% else %}
                     <h4>Кажется, ты еще не залогинился</h4>
                     <a href="{% url 'register'%}"><button>Регистрация</button></a>
-                    <a href="{% url 'login'%}"><button>Войти</button></a>
+                    <a href="{% url 'login' %}"><button>Войти</button></a>
                 {% endif %}
             </div>
         </header>
         <hr/>
         <div class="news-list">
+            <form method="get">
+                {{ form.as_p }}
+                <button type="submit">Поиск</button>
+            </form>
+
             {% if not news_list %}
                 <h3>Новостей нет</h3>
             {% else %}
